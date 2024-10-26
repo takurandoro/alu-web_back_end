@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-''' Python script that provides some stats about Nginx logs stored in MongoDB '''
-
+"""python scripts"""
 from pymongo import MongoClient
 
 
@@ -8,21 +7,22 @@ METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 
 def log_stats(mongo_collection, option=None):
-    ''' Log Nginx stats from collection '''
+    """ script that provides some stats about Nginx logs stored in MongoDB
+    """
+    items = {}
     if option:
         value = mongo_collection.count_documents(
             {"method": {"$regex": option}})
         print(f"\tmethod {option}: {value}")
         return
 
-    total = mongo_collection.count_documents({})
-    print(f"{total} logs")
+    result = mongo_collection.count_documents(items)
+    print(f"{result} logs")
     print("Methods:")
     for method in METHODS:
-        log_stats(mongo_collection, method)
-    stat_check = mongo_collection.count_documents(
-        {"path": {"$regex": "/status"}})
-    print(f"{stat_check} status check")
+        log_stats(nginx_collection, method)
+    status_check = mongo_collection.count_documents({"path": "/status"})
+    print(f"{status_check} status check")
 
 
 if __name__ == "__main__":
